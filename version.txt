@@ -1,0 +1,16 @@
+VSVersionInfo(
+  ffi=FixedFileInfo(
+    filevers=(1, 0, 0, 0),
+    fileType=0x1,
+  ),
+  kids=[
+    StringFileInfo([
+      StringTable(
+        '040904B0',
+        [
+          StringStruct('FileDescription', '小鱼日历'),
+          StringStruct('CompanyName', 'syido')
+        ])
+    ])
+  ]
+)

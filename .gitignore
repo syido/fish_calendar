@@ -1,0 +1,9 @@
+.idea
+.venv
+.vscode
+__pycache__
+build
+cache
+dist
+*.spec
+*.cmd
