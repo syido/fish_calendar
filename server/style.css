@@ -1,0 +1,232 @@
+:root {
+    --primary-color: #437bfb;
+    --secondary-color: #c0dff5;
+    --thirdary-color: #a4afb74e;
+    --background-color: #ffffffe1;
+    --disable-color: rgb(141, 141, 141);
+    --more-disable-color: #bababa;
+    --hover-color: #bababa1b;
+
+    --html-fontsize: 16px;
+    --ver-margin: 2.5rem;
+    --hor-margin: 2.5rem;
+    --forward: flex-end;
+    --background-file: url('');
+
+    --cwidth: 22rem;
+    --transition: 0.2s;
+
+    --xlarger: 1.6rem;
+    --larger: 1.1rem;
+    --large: 0.9rem;
+    --small: 0.8rem;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+    font-size: var(--html-fontsize);
+}
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--background-file) center center / cover no-repeat fixed;
+    display: flex;
+    justify-content: var(--forward)
+}
+
+.cframe {
+    width: fit-content;
+    height: 24.5rem;
+    margin: var(--ver-margin) var(--hor-margin);
+    padding: 1.2rem;
+    border-radius: 2rem;
+    background-color: var(--background-color);
+    backdrop-filter: blur(16px);
+    cursor: default;
+}
+
+.main-column {
+    display: flex;
+    flex-direction: row;
+    gap: 1.2rem;
+}
+
+.cdivider {
+    margin: 1.8rem 0rem;
+    background-color: var(--more-disable-color);
+    width: 1px;
+}
+
+.cgrid {
+    display: grid;
+    width: var(--cwidth);
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.cweek-grid {
+    display: flex;
+    flex-direction: row;
+    width: var(--cwidth);
+}
+
+.cday {
+    border-radius: 0.6rem;
+    padding: 0.4rem 0px;
+    font-weight: bold;
+    text-align: center;
+    height: 2.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    transition: var(--transition);
+}
+
+.cday.today {
+    color: var(--primary-color);
+}
+
+.cday.selected {
+    background-color: var(--thirdary-color);
+}
+
+.cday:hover {
+    background-color: var(--hover-color);
+}
+
+.cother-month {
+    color: var(--disable-color);
+}
+
+.cweek {
+    text-align: center;
+    padding: 0.5rem 0px;
+    flex: 1;
+}
+
+.cflow {
+    margin-top: 0.8rem;
+    overflow: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 15.4rem;
+}
+
+.citem {
+    width: 14rem;
+    padding: 0.5rem 0.7rem;
+    transition: var(--transition);
+    border-radius: 0.8rem;
+}
+
+.citem:hover {
+    background-color: var(--hover-color);
+}
+
+.citem > p.title {
+    font-size: var(--larger);
+    font-weight: bold;
+    margin: 0.1rem;
+}
+
+.citem > p.date {
+    margin: 0.1rem;
+    font-size: var(--large);
+    word-spacing: 0.1rem;
+}
+
+.shadowed {
+    box-shadow: 0.2rem 0.2rem 2rem rgba(0, 0, 0, 0.2);
+}
+
+.cmonth {
+    font-size: var(--xlarger);
+    font-weight: bolder;
+}
+
+.cmonthbar {
+    padding: 0.8rem;
+    display: flex;
+    align-items: flex-end;
+}
+
+.csyncstate {
+    color: var(--more-disable-color);
+    font-size: var(--small);
+    padding: 0.1rem 0.3rem;
+}
+
+div.half.mark {
+    border-radius: 0.15rem;
+    width: 50%;
+}
+
+div.full-body.mark {
+    width: 100%;
+}
+
+div.full-back.mark{
+    width: 75%;
+    align-self: first baseline;
+    border-radius: 0rem 0.15rem 0.15rem 0rem;
+}
+
+div.full-front.mark{
+    width: 70%;
+    align-self: last baseline;
+    border-radius: 0.15rem 0rem 0rem 0.15rem;
+}
+
+div.mark {
+    background-color: var(--primary-color);
+    height: 0.35rem;
+}
+
+div.easy.mark {
+    width: 0.35rem;
+    border-radius: 0.35rem;
+}
+
+.citem > p.countdown {
+    font-size: var(--larger);
+    color: var(--primary-color);
+    font-weight: bold;
+    margin: 0.1rem ;
+}
+
+.citem > .time {
+    margin: 0.1rem;
+    font-size: var(--larger);
+    font-weight: bold;
+}
+
+.citem > .plan {
+    margin: 0.1rem;
+}
+
+.citem > .note {
+    margin: 0.1rem;
+    font-size: var(--large);
+}
+
+div.cother-month.cday > div.mark.easy {
+    background-color: var(--more-disable-color);
+}
+
+
+.cflow::-webkit-scrollbar {
+    width: 0.3rem;
+}
+.cflow::-webkit-scrollbar-track {
+    margin: 0.8rem 0rem;
+    background: #ffffff00;
+}
+.cflow::-webkit-scrollbar-thumb {
+    background: var(--hover-color);
+    border-radius: 0.5rem;
+}
+/* .cflow::-webkit-scrollbar-thumb:hover {
+    background: var(--more-disable-color);
+} */
