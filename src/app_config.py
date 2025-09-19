@@ -6,6 +6,8 @@ from src.utils import MyQFont, get_resourse
 class AppInfo:
     app_name = "小鱼日历"
     app_icon = get_resourse("assets/icon_mid.png")
+    link = '<a href="https://github.com/syido/fish_calendar">项目地址</a>'
+    license = '<a href="https://github.com/syido/fish_calendar/blob/main/docs/LICENSES.md">许可证</a>'
     cache_path = os.path.join(os.getenv('LOCALAPPDATA'), 'FishCalender')
     port = "717"
     

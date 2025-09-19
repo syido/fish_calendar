@@ -46,19 +46,16 @@ class VersionBox(QDialog):
         column.addWidget(center(QLabel("由 syido 用 ❤️ 制作")))
         
         column.addStretch()
-        version_info = center(WithFont(QLabel("1.0.0 · 2025.9.17"), AppUIStyle.Font.small))
+        version_info = center(WithFont(QLabel(f'1.0.0 · 2025.9.19'), AppUIStyle.Font.small))
         version_info.setStyleSheet("color: #8d8d8d;")
         column.addWidget(version_info)
+        
+        link_info = center(WithFont(QLabel(f'{AppInfo.link} | {AppInfo.license}'), AppUIStyle.Font.small))
+        link_info.setStyleSheet("color: #8d8d8d;")
+        link_info.setOpenExternalLinks(True)
+        column.addWidget(link_info)
         
     def event(self, e):
         if e.type() == QEvent.WindowDeactivate:  # 窗口失活
             self.close()
         return super().event(e)
-
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = VersionBox()
-    window.show()
-    sys.exit(app.exec())
