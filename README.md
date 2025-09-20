@@ -22,7 +22,7 @@ class AppKey:
 若需要打包程序，可运行以下命令：
 
 ```ps
-pyinstaller main.py --version-file version.txt -- name "FishCalendar" --noconsole --icon="assets/icon.ico" --add-data "assets;assets"
+pyinstaller main.py --version-file version.txt --name "FishCalendar" --noconsole --icon="assets/icon.ico" --add-data "assets;assets"
 ```
 
 或用其他方式重新打包。

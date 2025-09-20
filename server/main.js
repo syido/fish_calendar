@@ -327,7 +327,11 @@ window.wallpaperPropertyListener = {
             root.style.setProperty('--primary-color', color)
         }
         if (properties.background) {
-            root.style.setProperty('--background-file', "url('file:///" + properties.background.value + "')");
+            if (properties.customrandomdirectory.value) { 
+                root.style.setProperty('--background-file', "url('file:///" + properties.background.value + "')");
+            } else {
+                root.style.setProperty('--background-file', "background.jpg")
+            }  
         }
         if (properties.forward) {
             switch (properties.forward.value) {
@@ -339,12 +343,5 @@ window.wallpaperPropertyListener = {
                     root.style.setProperty('--forward', 'center'); break;
             }
         }
-        // if (properties.yourproperty) {
-        //     // Do something with yourproperty
-        // }
-        // if (properties.anotherproperty) {
-        //     // Do something with anotherproperty
-        // }
-        // // Add more properties here
     },
 };
