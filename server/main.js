@@ -33,9 +33,6 @@ eventSource.onerror = (event) => {
 };
 
 
-
-// const jsonString = `[{"title": "测试", "note": "", "start": "2025-08-26T00:00:00Z", "end": "2025-08-26T02:00:00Z"}, {"title": "另一测试", "note": "", "start": "2025-08-27T12:00:00Z", "end": "2025-08-27T13:30:00Z"}, {"title": "放大假", "note": "倒计时", "start": "2025-08-28T00:00:00Z", "end": "2025-08-29T00:00:00Z"}, {"title": "未来测试", "note": "", "start": "2025-09-05T16:00:00Z", "end": "2025-09-05T22:00:00Z"}, {"title": "每日测试", "note": "", "start": "2025-09-11T00:00:00Z", "end": "2025-09-11T00:30:00Z"}, {"title": "另一未来测试", "note": "", "start": "2025-09-10T17:00:00Z", "end": "2025-09-13T00:00:00Z"}, {"title": "未来2", "note": "", "start": "2025-09-23T00:00:00Z", "end": "2025-09-23T00:30:00Z"}, {"title": "未来3", "note": "", "start": "2025-09-25T00:00:00Z", "end": "2025-09-25T00:30:00Z"}, {"title": "未来4", "note": "", "start": "2025-09-27T00:00:00Z", "end": "2025-09-27T00:30:00Z"}, {"title": "某件事", "note": "倒计时", "start": "2025-09-28T00:00:00Z", "end": "2025-09-28T00:30:00Z"}]`
-
 initCalender()
 
 function decodeEvents(jsonString) {
@@ -327,10 +324,10 @@ window.wallpaperPropertyListener = {
             root.style.setProperty('--primary-color', color)
         }
         if (properties.background) {
-            if (properties.customrandomdirectory.value) { 
+            if (properties.background.value) { 
                 root.style.setProperty('--background-file', "url('file:///" + properties.background.value + "')");
             } else {
-                root.style.setProperty('--background-file', "background.jpg")
+                root.style.setProperty('--background-file', "url('background.jpg')")
             }  
         }
         if (properties.forward) {
