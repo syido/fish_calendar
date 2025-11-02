@@ -8,10 +8,10 @@ from queue import Queue
 
 import pystray
 from PIL import Image
-from PySide6.QtCore import QObject, Signal, Slot, QThread, QCoreApplication
+from PySide6.QtCore import QObject, Signal, Slot, QThread, QCoreApplication, Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, \
-    QHBoxLayout, QGroupBox, QSpacerItem
+    QHBoxLayout, QGroupBox, QSpacerItem, QMessageBox, QApplication
 from flask import Flask, Response
 from flask_cors import CORS
 from werkzeug.serving import make_server
@@ -144,16 +144,16 @@ class FishCalenderApp(QWidget):
         self.sync_worker = SyncWorker(self.task_queue)
         self.tray_worker = TrayWorker(self.task_queue)
         self.serv_worker = ServerWorker(self.update_queue, first_data)
-        self.sync_thread = QThread()
-        self.tray_thread = QThread()
-        self.serv_thread = QThread()
+        self.sync_thread = MyQThread('sync')
+        self.tray_thread = MyQThread('tray')
+        self.serv_thread = MyQThread('serv')
         self.sync_worker.moveToThread(self.sync_thread)
         self.tray_worker.moveToThread(self.tray_thread)
         self.serv_worker.moveToThread(self.serv_thread)
         
-        self.sync_thread.finished.connect(self.sync_worker.deleteLater)
-        self.tray_thread.finished.connect(self.tray_worker.deleteLater)
-        self.serv_thread.finished.connect(self.serv_worker.deleteLater)
+        self.sync_worker.finished.connect(self.sync_thread.quit)
+        self.tray_worker.finished.connect(self.tray_thread.quit)
+        self.sync_worker.finished.connect(lambda: print("finish了"))
         self.sync_thread.started.connect(self.sync_worker.run)
         self.tray_thread.started.connect(self.tray_worker.run)
         self.serv_thread.started.connect(self.serv_worker.run)
@@ -173,12 +173,20 @@ class FishCalenderApp(QWidget):
     
     
     def on_connect_clicked(self):
+        if '退出' in self.connect_button.text():
+            reply = QMessageBox.question(None, "退出登录", f"是否确定退出登录（程序将重新启动）",
+                QMessageBox.Yes | QMessageBox.No
+            )
+            if reply == QMessageBox.No: return
+            QApplication.instance().exit(42)
+            
+            return
+        
         rect = calculate_center_position(self.geometry(), QSize(400, 300))
         if self.am is None:
             log("还没创建权限管理器")
             return
-        # TODO
-        # 不知道为什么崩了
+
         self.update_queue.put("stop")
         self.version_dialog = ConnectBox(self, rect, self.am)
         log("打开了验证窗口")
@@ -200,7 +208,7 @@ class FishCalenderApp(QWidget):
     def on_check_res(self, res, name):
         self.connect_button.setEnabled(True)
         if res:
-            self.connect_button.setText("重置")
+            self.connect_button.setText("退出")
             self.name_label.setText(name)
             self.sync_button.setEnabled(True)
         else:
@@ -233,7 +241,13 @@ class FishCalenderApp(QWidget):
     @Slot(int)
     def on_tray_signal(self, command: bool):
         match command:
-            case 0: 
+            case 0:
+                self.task_queue.put(None)
+                self.update_queue.put(None)
+                if not self.tray_worker.icon is None:
+                    self.tray_worker.icon.stop()
+                self.sync_thread.wait()
+                self.serv_thread.quit()
                 QCoreApplication.instance().quit()
             case 1: 
                 self.show()
@@ -302,6 +316,7 @@ class SyncWorker(QObject):
                 continue
             
             task = self.task_queue.get()
+            
             # 停止分支
             if task is None: break
                 
@@ -309,20 +324,23 @@ class SyncWorker(QObject):
             if task == "check":
                 log("同步线程检查缓存")
                 check_res, name = self.am.check_cache()
-                log(name)
                 self.check_res_sign.emit(check_res, name)
                 if not check_res:
                     last_sync_time = time.time()
                     while not self.task_queue.qsize() == 0:
                         self.task_queue.get()
                     log("等待登录账号")
+                else: 
+                    log(f'账户：{name}')
                 
             # 立即同步分支
             if task == "sync":
                 log("主动同步中：")
                 news = self.sync()
-            
-        self.finished.emit()
+        
+        log("同步线程主动退出")
+        # self.finished.emit()
+        QThread.currentThread().quit()
        
        
     def sync(self) -> bool:
@@ -358,6 +376,9 @@ class SyncWorker(QObject):
             self.sync_state_sign.emit(1, length, "")    
             return True
         
+        except FileNotFoundError:
+            mkdir_not_exsits(AppInfo.cache_path)
+            self.task_queue.put("check")
         except requests.exceptions.HTTPError as err:
             err_str = "似乎是Token过期，即将刷新"
             log(f"{err_str}: {err}")  # 在这里访问 err
@@ -389,9 +410,10 @@ class ServerWorker(QObject):
         self.data = first_data
         self.port = AppInfo.port
         self._srv = None
+        self.should_run = True
 
     def run(self):
-        while True:
+        while self.should_run:
             _log = logging.getLogger('werkzeug')
             _log.setLevel(logging.ERROR)
             flask_app = Flask("桌面服务器")
@@ -454,7 +476,6 @@ class ServerWorker(QObject):
                 # 使用 make_server 创建可控的 WSGI server
                 self._srv = make_server('127.0.0.1', self.port, flask_app)
                 log(f"桌面服务器将在 http://127.0.0.1:{self.port} 中开放")
-                # flask_app.run(host='localhost', port=self.port, debug=False)
                 self._srv.serve_forever()
             except Exception as e:
                 log(f"桌面服务器发生错误: {e}")
@@ -462,12 +483,18 @@ class ServerWorker(QObject):
             log("桌面服务器线程结束")
             self._srv = None
     
+    def shutdown(self):
+        log("将关闭桌面服务器")
+        self.should_run = False
+        threading.Thread(target=lambda: self._srv.shutdown() if self._srv else None, daemon=True).start()
 
 class TrayWorker(QObject):
     signal = Signal(int)
+    finished = Signal()
     
     def __init__(self, task_queue: queue.Queue):
         self.task_queue = task_queue
+        self.icon = None
         super().__init__()
         
     def on_exit(self):
@@ -551,5 +578,9 @@ class TrayWorker(QObject):
         )
         
         icon_image = Image.open(AppInfo.app_icon)
-        icon = pystray.Icon(AppInfo.app_name, icon_image, AppInfo.app_name, menu)
-        icon.run(setup=None)
+        self.icon = pystray.Icon(AppInfo.app_name, icon_image, AppInfo.app_name, menu)
+        self.icon.run(setup=None)
+        # self.finished.emit()
+        # TODO
+        # 不知道为什么就是不能用finished.emit()方法退出
+        QThread.currentThread().quit()
