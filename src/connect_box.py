@@ -115,6 +115,12 @@ class ConnectBox(QDialog):
         self.cancel_button.clicked.connect(lambda: (self.shutdown(),self.reject()))
         self.ok_button.clicked.connect(lambda: (self.shutdown(), self.accept()))
         
+        
+    def closeEvent(self, arg__1):
+        log("调用closeEvent")
+        self.shutdown()
+        return super().closeEvent(arg__1)
+        
     
     def shutdown(self):
         self.auth_task_queue.put(None)

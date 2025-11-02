@@ -16,6 +16,9 @@ msal==1.33.0
 packaging==25.0
 pefile==2023.2.7
 pillow==11.3.0
+pip-licenses==5.0.0
+prettytable==3.16.0
+psutil==7.1.2
 pycparser==2.22
 pyinstaller==6.15.0
 pyinstaller-hooks-contrib==2025.8
@@ -28,5 +31,7 @@ pywin32-ctypes==0.2.3
 requests==2.32.5
 shiboken6==6.9.1
 six==1.17.0
+tomli==2.2.1
 urllib3==2.5.0
+wcwidth==0.2.13
 Werkzeug==3.1.3

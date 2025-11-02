@@ -1,6 +1,6 @@
 import os
 
-from src.utils import MyQFont, get_resourse
+from src.utils import MyQFont, get_resourse, mkdir_not_exsits
 
 
 class AppInfo:
@@ -16,8 +16,7 @@ class AppInfo:
     REDIRECT_PORT = "9999"
     REDIRECT_URI = "http://localhost:" + REDIRECT_PORT
     
-if not os.path.exists(AppInfo.cache_path):
-    os.mkdir(AppInfo.cache_path)
+mkdir_not_exsits(AppInfo.cache_path)
 
 class AppUIStyle:
     class Font:

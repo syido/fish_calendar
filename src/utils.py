@@ -1,6 +1,6 @@
-import datetime, json, os, sys
+import datetime, json, os, sys, subprocess, time, psutil
 from typing import TypeVar
-from PySide6.QtCore import QRect, QSize
+from PySide6.QtCore import QRect, QSize, QThread
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QWidget
 
@@ -9,6 +9,10 @@ except: _base_path = "."
 def get_resourse(path: str) -> str:
     return os.path.join(_base_path, path)
 
+def mkdir_not_exsits(path: str):
+    if not os.path.exists(path):
+        os.mkdir(path)
+
 
 def MyQFont(size: int, bold = False):
     font = QFont()
@@ -16,6 +20,12 @@ def MyQFont(size: int, bold = False):
     font.setPointSize(size)
     if bold: font.setBold(True)
     return font
+
+
+def MyQThread(name: str) -> QThread:
+        thread = QThread()
+        thread.setObjectName(name)
+        return thread
 
 
 T = TypeVar('QWidget', bound="QWidget")
@@ -76,3 +86,32 @@ def dumpEasliy(data: dict) -> str:
         new_list.append(item)
             
     return json.dumps(new_list, ensure_ascii=False)
+
+
+def start_myself():
+    if not os.name == 'nt':
+        raise Exception("you may need to write other system's version by yourself")
+    
+    exe = sys.executable
+    pid = os.getpid()
+    if 'python.exe' in exe:      
+        script = os.path.abspath(sys.argv[0])
+        args = sys.argv[1:]
+        cmd = [exe, script] + args + ["-w", str(pid), "-d"]
+        log(f"自己运行 > \n{' '.join(cmd)}")
+    else:
+        cmd = [exe, "-w", str(pid), "-d"]
+        subprocess.Popen(cmd, close_fds=True, start_new_session=True)
+        log("已启动新的实例")
+        
+
+def wait_process(pid: int, timeout: float = 10.0) -> bool:
+    log(f"等待进程 {pid} 结束")
+    end = time.time() + timeout
+    while time.time() < end:
+        if not psutil.pid_exists(int(pid)):
+            log(f"进程 {pid} 已结束")
+            return True
+        time.sleep(0.2)
+    log("还没结束")
+    return False
