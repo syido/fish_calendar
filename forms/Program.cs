@@ -8,7 +8,13 @@ namespace FCForms
         [STAThread]
         static void Main()
         {
+
             FCForms.Run();
+            FCForms.ReadyThen(() => 
+            {
+                FCForms.HomeT(FCForms.Label.lAccount, "aaaaa");
+            });
+            
         }
     }
 }

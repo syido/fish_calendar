@@ -8,7 +8,7 @@ from src.utils import log, wait_process, start_myself, get_resourse
 from src.app_config import AppInfo, AppUIStyle
 from src.dialogs import Dialog
 
-
+from libs.FCForms import FCForms
 
 
 def delete_cache():
@@ -35,6 +35,7 @@ def main():
     
     # 先启动应用
     app = QApplication(sys.argv)
+    FCForms.Run()
     # app.setFont(AppUIStyle.Font.default)
     
     # 清理缓存部分
