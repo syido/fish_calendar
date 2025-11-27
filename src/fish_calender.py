@@ -22,6 +22,8 @@ from src.connect_box import ConnectBox
 from src.utils import *
 from src.version import VersionBox
 
+from libs.FCForms import FCForms
+
 
 class FishCalenderApp(QWidget):
     def __init__(self):
@@ -57,6 +59,8 @@ class FishCalenderApp(QWidget):
         self.server_date = WithFont(QLabel(" "), AppUIStyle.Font.small)
         self.reset_button = WithFont(QPushButton("重启"))
         self.reset_button.setEnabled(False)
+        
+        
         
         
     def blind_event(self):

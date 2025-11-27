@@ -28,5 +28,5 @@ class AppUIStyle:
 class ConstStr:
     class Connect:
         step1 = "点击“在浏览器打开”按钮或复制链接到浏览器，在打开的页面中登录账号并确认授权"
-        simple_url = "https://sdfsdf.sdf/sdfsdfsdfsdfsdfsdfsdfsdfsdf"
+        simple_url = "https://not.found/404"
         step2 = "正在等待授权结果。如果授权成功仍无响应，也可以直接将含有 “localhost” 的链接复制到下面的文本框中："

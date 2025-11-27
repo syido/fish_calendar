@@ -9,6 +9,8 @@ from src.app_config import AppInfo, AppUIStyle
 from src.dialogs import Dialog
 
 
+
+
 def delete_cache():
     log("将要删除缓存")
     while True:

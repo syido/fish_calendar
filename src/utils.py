@@ -5,7 +5,7 @@ from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QWidget
 
 try: _base_path = sys._MEIPASS
-except: _base_path = "."
+except: _base_path = os.getcwd()
 def get_resourse(path: str) -> str:
     return os.path.join(_base_path, path)
 
@@ -23,9 +23,9 @@ def MyQFont(size: int, bold = False):
 
 
 def MyQThread(name: str) -> QThread:
-        thread = QThread()
-        thread.setObjectName(name)
-        return thread
+    thread = QThread()
+    thread.setObjectName(name)
+    return thread
 
 
 T = TypeVar('QWidget', bound="QWidget")
